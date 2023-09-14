@@ -1,0 +1,101 @@
+---
+title: "Resultados"
+author: "Erick Vázquez"
+date: "13 de Agosto del 2023"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    collapsed: true
+    smooth_scroll: true
+    theme: readable
+    highlight: zenburn
+    df_print: paged
+    code_folding: show
+      
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+Atajo para poner un chunk en markdown: ctr + alt + i
+No hay espacio
+
+Atajo para corre un knit: ctrl + shift + k
+
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+library(ggplot2)
+library(dplyr)
+library(ggprism) ## minor thicks
+
+setwd("D:\\Documentos\\Biologia UAM X\\SERVICIO\\SuelosBD\\cvs")
+
+mk1 <- read.csv("MK1.csv")
+mk2 <- read.csv("MK2.csv")
+mk3 <- read.csv("MK3.csv")
+mk3 <- read.csv("MK3.csv")
+ml1 <- read.csv("ML1.csv")
+ml2 <- read.csv("ML2.csv")
+ml3 <- read.csv("ML3.csv")
+mp1 <- read.csv("MP1.csv")
+mp2 <- read.csv("MP2.csv")
+mp3 <- read.csv("MP3.csv")
+
+sk1 <- read.csv("SK1.csv")
+sk2 <- read.csv("SK2.csv")
+sk3 <- read.csv("SK3.csv")
+sk3 <- read.csv("SK3.csv")
+sl1 <- read.csv("SL1.csv")
+sl2 <- read.csv("SL2.csv")
+sl3 <- read.csv("SL3.csv")
+sp1 <- read.csv("SP1.csv")
+sp2 <- read.csv("SP2.csv")
+sp3 <- read.csv("SP3.csv")
+```
+
+## *ANOVA Liberación de Energía de Mantillo*
+
+## ***Q1***
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+##Q1
+# Combine the values from different data frames
+group_mkq1 <- c(mk1$Q1....[1], mk2$Q1....[1], mk3$Q1....[1])
+group_mlq1 <- c(ml1$Q1....[1], ml2$Q1....[1], ml3$Q1....[1])
+group_mpq1 <- c(mp1$Q1....[1], mp2$Q1....[1], mp3$Q1....[1])
+
+# Create a data frame
+data_mq1 <- data.frame(
+  Value = c(group_mkq1, group_mlq1, group_mpq1),
+  Group = rep(c("MK", "ML", "MP"), each = length(group_mkq1))
+)
+
+data_mq1$Group <- as.factor(data_mq1$Group)
+
+contrasts(data_mq1$Group) <- contr.sum(3)
+
+```
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+ggplot(data_mq1, aes(x = Group, y = Value, fill= Group)) +
+  geom_boxplot() +
+  scale_fill_grey(start = 0.5, end = 1)+
+  theme_classic() +
+  labs(title = "Boxplot for Litter Q1", x = "Group", y = "Value")
+```
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+anova_mq1 <- aov(data_mq1$Value~data_mq1$Group)
+```
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+summary(anova_mq1)
+```
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+TukeyHSD(anova_mq1)
+```
